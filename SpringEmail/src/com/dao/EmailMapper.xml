@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.EmailMapper" >
+
+  <resultMap id="accepterMap" type="Accepter" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="email" property="aemail" jdbcType="VARCHAR" />
+    <result column="eid" property="eid" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="userMap" type="User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="emailMap" type="Email" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="subject" property="subject" jdbcType="VARCHAR" />
+    <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+    <result column="fileName" property="filename" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <association property="user" javaType="User" resultMap="userMap"/>
+    <collection property="accepters" ofType="Accepter" resultMap="accepterMap"/>
+  </resultMap>
+
+  <!-- 分页查询 -->
+  <select id="queryByPage" resultMap="emailMap" parameterType="map">
+    select 
+     *
+    from t_email
+    limit #{from},#{pageSize}
+  </select>
+
+  <!-- 查询分页总记录数 -->
+  <select id="count" resultType="int">
+    SELECT count(1) FROM t_email
+  </select>
+
+
+  <!--根据ID删除邮件信息 -->
+  <delete id="deleteById" parameterType="int" >
+    delete from t_email
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!--保存邮件信息-->
+  <insert id="saveEmail" parameterType="Email" >
+    insert into t_email (content, subject,
+      filePath, fileName, uid
+      )
+    values (#{content,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR},
+      #{filepath,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}
+      )
+  </insert>
+
+  <!-- 保存邮件接受者 -->
+  <insert id="saveAccepter" parameterType="Accepter">
+      INSERT INTO t_accepter VALUES (NULL ,#{aemail},#{eid});
+  </insert>
+
+  <!--根据主题来查询邮件的信息 -->
+  <select id="queryBySubject" parameterType="string" resultMap="emailMap">
+    SELECT * from t_email where subject=#{subject}
+  </select>
+
+</mapper>
