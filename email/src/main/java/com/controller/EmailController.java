@@ -7,12 +7,16 @@ import com.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("email")
@@ -47,6 +51,22 @@ public class EmailController {
         email.setFilepath(path+"\\"+file.getOriginalFilename());
         emailService.sendSingleEmail(user,email,accepter);
         return "success";
+    }
+
+    @RequestMapping("query/{page}")
+    public String query(@PathVariable int page, Model model){
+        int count=emailService.count();
+        int pageSize=8;
+        int lastPage=count%pageSize==0?count/pageSize:count/pageSize+1;
+        Map<String,Integer> map=new HashMap<>();
+        map.put("page",page);
+        map.put("pageSize",pageSize);
+        List<Email> emails= emailService.queryByPage(map);
+        model.addAttribute("page",page);
+        model.addAttribute("lastPage",lastPage);
+        model.addAttribute("emails",emails);
+
+        return "show";
     }
 
 

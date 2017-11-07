@@ -43,6 +43,15 @@ public class User implements Serializable{
         this.email = email == null ? null : email.trim();
     }
 
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
+    public User() {
+    }
+
     @Override
     public String toString() {
         return "User{" +

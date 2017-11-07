@@ -29,8 +29,8 @@
   <!-- 分页查询 -->
   <select id="queryByPage" resultMap="emailMap" parameterType="map">
     select 
-     *
-    from t_email
+     e.*,u.*
+    from t_email e INNER JOIN t_user u ON e.uid=u.id
     limit #{from},#{pageSize}
   </select>
 

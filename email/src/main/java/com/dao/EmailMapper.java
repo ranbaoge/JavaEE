@@ -36,7 +36,7 @@ public interface EmailMapper {
      * 分页查询邮件
      * @return
      */
-    List<Email> queryByPage(Map<String,Integer> map);
+    List<Email> queryByPage(Map<String, Integer> map);
 
     /**
      * 查询分页总记录数

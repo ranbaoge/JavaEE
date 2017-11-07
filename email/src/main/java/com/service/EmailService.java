@@ -21,7 +21,7 @@ public interface EmailService {
      * @param email
      * @param accepters
      */
-    void sendManyEmail(User user ,Email email, List<Accepter> accepters);
+    void sendManyEmail(User user, Email email, List<Accepter> accepters);
 
 
     /**
@@ -34,7 +34,7 @@ public interface EmailService {
      * 分页查询邮件
      * @return
      */
-    List<Email> queryByPage(Map<String,Integer> map);
+    List<Email> queryByPage(Map<String, Integer> map);
 
     /**
      * 查询分页总记录数
