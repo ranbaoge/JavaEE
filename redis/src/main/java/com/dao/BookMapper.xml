@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.BookMapper" >
+
+  <!-- 书籍种类的映射 -->
+  <resultMap id="categoryMap" type="Category" >
+    <id column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="cname" property="cname" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 书籍映射 -->
+  <resultMap id="bookMap" type="Book" >
+    <id column="bid" property="bid" jdbcType="INTEGER" />
+    <result column="bname" property="bname" jdbcType="VARCHAR" />
+    <result column="bauthor" property="bauthor" jdbcType="VARCHAR" />
+    <result column="bpublisher" property="bpublisher" jdbcType="VARCHAR" />
+    <result column="bpublishDate" property="bpublishdate" jdbcType="TIMESTAMP" />
+    <result column="bcid" property="bcid" jdbcType="INTEGER" />
+    <!-- 关联映射 -->
+    <association property="category" javaType="Category" resultMap="categoryMap"></association>
+  </resultMap>
+  
+  <select id="queryAll" resultMap="categoryMap">
+    select * from t_category
+  </select>
+ 
+  <select id="queryByPage" resultMap="bookMap" parameterType="map" >
+      select b.*,c.* from t_book b 
+      inner join t_category c
+      on b.bcid=c.cid
+      <where>
+          <if test="name!=null and name!=''">and bname like CONCAT('%',#{name},'%')</if>  
+          <if test="author!=null and author!=''">and bauthor like CONCAT('%',#{author},'%')</if> 
+          <if test="publishDate!=null">and bpublishDate like CONCAT('%',#{publishDate},'%')</if>
+      </where>
+      limit #{from},#{pageSize}
+  </select>
+  
+  <!-- 模糊总记录数 -->
+  <select id="count" parameterType="map" resultType="int">
+     select count(1) from t_book
+     <where>
+          <if test="name!=null and name!=''">and bname like CONCAT('%',#{name},'%')</if>  
+          <if test="author!=null and author!=''">and bauthor like CONCAT('%',#{author},'%')</if> 
+          <if test="publishDate!=null">and bpublishDate like CONCAT('%',#{publishDate},'%')</if>
+     </where>
+  </select>
+  
+  <!-- 根据ID删除 -->
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from t_book
+    where bid = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 保存书籍 -->
+  <insert id="saveBook" parameterType="Book" >
+    insert into t_book (bname, bauthor, 
+      bpublisher, bpublishDate, bcid
+      )
+    values (#{bname,jdbcType=VARCHAR}, #{bauthor,jdbcType=VARCHAR}, 
+      #{bpublisher,jdbcType=VARCHAR}, #{bpublishdate,jdbcType=TIMESTAMP}, #{bcid,jdbcType=INTEGER}
+      )
+  </insert>
+
+
+    <!-- 加入Redis缓存-->
+    <cache eviction="LRU" type="com.cache.RedisCache"></cache>
+</mapper>
