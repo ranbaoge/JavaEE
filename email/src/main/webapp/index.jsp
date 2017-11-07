@@ -12,10 +12,20 @@
   <head>
     <title>主页</title>
     <link rel="stylesheet" href="${ctx}/css/bootstrap.min.css">
+      <script type="text/javascript" src="${ctx}/js/jquery-3.2.1.min.js"></script>
+      <script type="text/javascript" src="${ctx}/js/index.js"></script>
     <style type="text/css">
         .container{
           margin-top: 100px;
           border: 1px solid lightblue;
+        }
+
+        #delete{
+            color: red;
+        }
+
+        #add{
+            color: greenyellow;
         }
     </style>
   </head>
@@ -31,7 +41,7 @@
 
          <div class="row">
             <div class="col-md-4 col-md-offset-4">
-                 <form action="${ctx}/email/singleEmail" method="post" enctype="multipart/form-data">
+                 <form action="${ctx}/email/email" method="post" enctype="multipart/form-data">
                    <div class="form-group">
                      发送者:<input class="form-control" name="email" type="text" readonly="readonly" value="${u.email}">
                    </div>
@@ -51,7 +61,9 @@
                    </div>
 
                    <div class="form-group">
-                     接受者:<input class="form-control" name="aemail" type="text" placeholder="请输入接受者邮箱地址">
+                     接受者:
+                       <span class="glyphicon glyphicon-plus" id="add"></span>
+                       <span class="glyphicon glyphicon-minus" id="delete"></span>
                    </div>
                    <div class="form-group">
                      <input type="submit" value="上传" class="btn btn-success">

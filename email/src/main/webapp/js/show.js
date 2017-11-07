@@ -1,7 +1,7 @@
 $(function () {
 
     //隔行变色
-    $(".tr:odd").css("background-color","blue");
+    $(".tr:odd").css("background-color","#F5F5F5");
 
     //分页
     var page=$("#page").val();

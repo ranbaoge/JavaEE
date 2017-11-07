@@ -9,12 +9,7 @@ import java.util.Map;
 
 public interface EmailService {
 
-    /**
-     * 发送单个邮件
-     * @param email
-     * @param accepter
-     */
-    void sendSingleEmail(User user, Email email, Accepter accepter);
+
 
     /**
      * 邮件群发

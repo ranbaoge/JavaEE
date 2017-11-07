@@ -33,6 +33,14 @@ public class Accepter implements Serializable{
         this.eid = eid;
     }
 
+    public Accepter() {
+    }
+
+    public Accepter(String aemail, Integer eid) {
+        this.aemail = aemail;
+        this.eid = eid;
+    }
+
     @Override
     public String toString() {
         return "Accepter{" +

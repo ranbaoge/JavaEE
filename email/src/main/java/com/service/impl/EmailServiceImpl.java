@@ -26,44 +26,7 @@ public class EmailServiceImpl implements EmailService{
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Override
-    public void sendSingleEmail(User user, Email email, Accepter accepter) {
 
-        //先保存邮件信息，然后保存发送者信息
-        //创建带格式的邮件发送类
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = null;
-        try {
-            messageHelper=new MimeMessageHelper(mimeMessage,true);
-            //设置邮件的发送者
-            messageHelper.setFrom(user.getEmail());
-            //设置邮件发送的主题
-            messageHelper.setSubject(email.getSubject());
-            //设置邮件发送的内容
-            messageHelper.setText(email.getContent(),true);
-            //设置单个接收者的用户
-            messageHelper.setTo(accepter.getAemail());
-            //设置邮件发送的附件
-            FileDataSource dataSource=new FileDataSource(new File(email.getFilepath()));
-            //添加附件
-            messageHelper.addAttachment(email.getFilename(),dataSource);
-
-            //发送邮件
-            javaMailSender.send(mimeMessage);
-
-            //保存邮件信息
-            emailMapper.saveEmail(email);
-            //设置接受者的外键
-            Email newEmail=emailMapper.queryBySubject(email.getSubject());
-            accepter.setEid(newEmail.getId());
-            //保存发送者的信息
-            emailMapper.saveAccepter(accepter);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public void sendManyEmail(User user,Email email, List<Accepter> accepters) {
@@ -104,8 +67,6 @@ public class EmailServiceImpl implements EmailService{
                 emailMapper.saveAccepter(accepter);
             }
 
-            //发送
-            javaMailSender.send(mimeMessage);
         }catch (Exception e){
 
         }
